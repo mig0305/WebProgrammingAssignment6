@@ -1,0 +1,70 @@
+{
+  "info": {
+    "name": "Notes REST API — Assignment 6",
+    "description": "Run Create first. Its test automatically saves the returned note ID. Then run the other requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "noteId", "value": "507f1f77bcf86cd799439011" }
+  ],
+  "item": [
+    {
+      "name": "1 — Create note (201)",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Created: 201', () => pm.response.to.have.status(201));",
+        "if (pm.response.code === 201) pm.collectionVariables.set('noteId', pm.response.json()._id);"
+      ], "type": "text/javascript" } }],
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"title\":\"Study REST APIs\",\"body\":\"Practice Express routes\",\"tags\":[\"webdev\",\"exam\"]" }, "url": "{{baseUrl}}/api/notes" }
+    },
+    {
+      "name": "2 — List all notes (200)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/notes" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('List: 200', () => pm.response.to.have.status(200));", "pm.test('Array response', () => pm.expect(pm.response.json()).to.be.an('array'));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "3 — Get one note (200)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/notes/{{noteId}}" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Get: 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "4 — Search titles (200)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/notes?search=study" }
+    },
+    {
+      "name": "5 — Replace note (200)",
+      "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"title\":\"Updated Study Notes\",\"body\":\"Revision completed\",\"tags\":[\"updated\"]}" }, "url": "{{baseUrl}}/api/notes/{{noteId}}" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Update: 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "6 — Invalid create (400)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"body\":\"No title\"}" }, "url": "{{baseUrl}}/api/notes" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Validation: 400', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "7 — Invalid ID (400)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/notes/not-an-objectid" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Invalid ID: 400', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "8 — Missing note (404)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/notes/507f1f77bcf86cd799439012" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Missing note: 404', () => pm.response.to.have.status(404));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "9 — Malformed JSON (400)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{invalid" }, "url": "{{baseUrl}}/api/notes" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Malformed JSON: 400', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "10 — Delete note (204)",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/notes/{{noteId}}" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Deleted: 204', () => pm.response.to.have.status(204));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "11 — Confirm deleted (404)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/notes/{{noteId}}" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Deleted note missing: 404', () => pm.response.to.have.status(404));"], "type": "text/javascript" } }]
+    }
+  ]
+}

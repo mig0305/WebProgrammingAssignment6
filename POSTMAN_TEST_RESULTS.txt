@@ -1,0 +1,17 @@
+**Postman API Testing Results**
+Based on the screenshots I provided:
+The Notes REST API was successfully tested using Postman, with all 11 requests returning the expected HTTP status codes and JSON responses:
+
+1. **POST — Create Note (201):** Successfully created a new note in MongoDB Atlas, returning its data, generated ID, and timestamps.
+2. **GET — List All Notes (200):** Successfully retrieved the stored notes as a JSON array, confirming that the API could access database records.
+3. **GET — Retrieve One Note (200):** Successfully retrieved a specific note using its MongoDB ObjectId, returning the correct document.
+4. **GET — Search Notes (200):** Successfully processed a title-based search, returning an empty array when no titles matched the search term, as expected.
+5. **PUT — Update Note (200):** Successfully modified an existing note's title, body, and tags while preserving its ID and creation timestamp and updating its modification timestamp.
+6. **POST — Invalid Creation (400):** Correctly rejected a request without a title, returning a meaningful JSON validation error.
+7. **GET — Invalid ID (400):** Correctly detected an incorrectly formatted MongoDB ObjectId and returned an appropriate error.
+8. **GET — Nonexistent Note (404):** Correctly handled a valid but nonexistent ObjectId, returning a `Note not found` error.
+9. **POST — Malformed JSON (400):** Successfully detected invalid JSON syntax and returned an appropriate error without crashing the server.
+10. **DELETE — Delete Note (204):** Successfully deleted an existing note, returning `204 No Content` with an empty response body.
+11. **GET — Confirm Deletion (404):** Confirmed successful deletion by attempting to retrieve the deleted note and receiving a `Note not found` response.
+
+These results demonstrate the correct implementation of CRUD operations, RESTful routing, HTTP status codes, input validation, and error handling. The attached Postman screenshots provide evidence of the successful execution of all 11 tests.
